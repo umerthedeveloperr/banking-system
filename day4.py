@@ -1,30 +1,58 @@
-with open('bsys.txt', 'r') as file:
+with open('test.txt', 'r') as file:
     userlist = []
     info = file.readline().strip()
     while info != '':
-        userdict = {"name": "", "pass": "" , "balance" : 0 }
+        userdict = {"name": "", "pass": "", "balance": 0}
         userdict["name"] = info
         info = file.readline().strip()
         userdict["pass"] = info
-        userlist.append(userdict)
         info = file.readline().strip()
         userdict["balance"] = int(info)
+        userlist.append(userdict)
         info = file.readline().strip()
 file.close()
 
 temp_list = []
 user_number = len(userlist)
 
-choice1 = 0
-while (choice1 == 0) or (choice1 == 1) or (choice1 == 2):
+choice1 = "0"
+while (choice1 == "0") or (choice1 == "1") or (choice1 == "2"):
     choice1 = input("Enter 1 to login, 2 to signup, 3 to exit")
-    choice1 = int(choice1)
-    if choice1 == 1:
+    if choice1 == "1":
         user_name = input("Enter your name")
         user_pass = input("Enter your password")
-        if user_name == "Adminacc" and user_pass == "11111":
-            print("admin")
-            exit()
+        if user_name == "Admin" and user_pass == "11111":
+            choice3 = "0"
+            while choice3 == "0" or choice3 == "1" or choice3 == "2":
+                choice3 = input("Enter 1 to delete user, 2 to exit")
+                if choice3 == "1":
+                    delete_user = input("Which user do you want to delete")
+                    while delete_user == "Admin":
+                        delete_user = input("You cannot deelete admin account! Enter again")
+                    name_found = any(item["name"] == delete_user for item in userlist)
+                    if name_found:
+                        userlist = [item for item in userlist if item["name"] != delete_user]
+                        print(f"{delete_user} has been deleted.")
+                    else:
+                        print(f"{delete_user} not found in the list.")
+                    user_number = len(userlist)
+                    for k in range(user_number):
+                        temp_list.append(userlist[k]["name"])
+                        temp_list.append(userlist[k]["pass"])
+                        temp_list.append(str(userlist[k]["balance"]))
+                    with open('test.txt', 'w') as file2:
+                        line = ''
+                        for l in range(len(temp_list)):
+                            line = line + temp_list[l] + "\n"
+                        file2.write(line)
+                        file2.close()
+                    print(temp_list)
+                    print(userlist)
+                elif choice3 == "2":
+                    exit()
+                else:
+                    choice3 == "0"
+                    print("Invalid input!")
         else:
             for i in range(user_number):
                 x = userlist[i]
@@ -38,7 +66,11 @@ while (choice1 == 0) or (choice1 == 1) or (choice1 == 2):
                         while (choice2 == 0) or (choice2 == 1) or (choice2 == 2) or (choice2 == 3) or (choice2 == 4):
                             choice2 = int(input("Enter 1 to Deposit, 2 to Withdraw, 3 to Transfer, 4 to Exit"))
                             if choice2 == 4:
-                                with open('bsys.txt', 'w') as file2:
+                                for k in range(user_number):
+                                        temp_list.append(userlist[k]["name"])
+                                        temp_list.append(userlist[k]["pass"])
+                                        temp_list.append(str(userlist[k]["balance"]))
+                                with open('test.txt', 'w') as file2:
                                     line = ''
                                     for l in range(len(temp_list)):
                                         line = line + temp_list[l] + "\n"
@@ -53,10 +85,6 @@ while (choice1 == 0) or (choice1 == 1) or (choice1 == 2):
                                     user_balance = user_balance + int(deposit_value)
                                     print("Your balance is" , {user_balance})
                                     userlist[i]["balance"] = user_balance
-                                    for k in range(user_number):
-                                        temp_list.append(userlist[k]["name"])
-                                        temp_list.append(userlist[k]["pass"])
-                                        temp_list.append(str(userlist[k]["balance"]))
                                 else:
                                     print("Invalid input!")
                             elif choice2 == 2:
@@ -68,10 +96,6 @@ while (choice1 == 0) or (choice1 == 1) or (choice1 == 2):
                                         user_balance = user_balance - int(withdraw_value)
                                         print("Your balance is" , {user_balance})
                                         userlist[i]["balance"] = user_balance
-                                        for k in range(user_number):
-                                            temp_list.append(userlist[k]["name"])
-                                            temp_list.append(userlist[k]["pass"])
-                                            temp_list.append(str(userlist[k]["balance"]))
                                 else:
                                     print("Invalid input!")
                             elif choice2 == 3:
@@ -79,7 +103,6 @@ while (choice1 == 0) or (choice1 == 1) or (choice1 == 2):
                                 while user_name_2 == user_name:
                                     user_name_2 = input("You cannot enter your own name! Enter again")
                                 for j in range(user_number):
-                                    key = 0
                                     x = userlist[j]
                                     user_name_check = x.get("name")
                                     if user_name_2 == user_name_check:
@@ -90,10 +113,6 @@ while (choice1 == 0) or (choice1 == 1) or (choice1 == 2):
                                                 userlist[i]["balance"] = userlist[i]["balance"] - int(transfer_value)
                                                 userlist[j]["balance"] = userlist[j]["balance"] + int(transfer_value)
                                                 print("Your balance is" , {userlist[i]["balance"]})
-                                                for k in range(user_number):
-                                                    temp_list.append(userlist[k]["name"])
-                                                    temp_list.append(userlist[k]["pass"])
-                                                    temp_list.append(str(userlist[k]["balance"]))
                                                 break
                                             else:
                                                 print("Balance is insufficient")
@@ -112,7 +131,7 @@ while (choice1 == 0) or (choice1 == 1) or (choice1 == 2):
                     break
                 elif i == (user_number - 1):
                     print("Wrong username")
-    elif choice1 == 2:
+    elif choice1 == "2":
         user_name = input("Enter your name")
         for i in range(user_number):
             x = userlist[i]
@@ -134,14 +153,14 @@ while (choice1 == 0) or (choice1 == 1) or (choice1 == 2):
             temp_list.append(userlist[k]["name"])
             temp_list.append(userlist[k]["pass"])
             temp_list.append(str(userlist[k]["balance"]))
-            with open('bsys.txt', 'w') as file2:
+            with open('test.txt', 'w') as file2:
                 line = ''
                 for l in range(len(temp_list)):
                     line = line + temp_list[l] + "\n"
                 file2.write(line)
             file2.close()
-    elif choice1 == 3:
+    elif choice1 == "3":
         exit()
     else:
-        choice1 = 0
+        choice1 = "0"
         print("Invalid")
